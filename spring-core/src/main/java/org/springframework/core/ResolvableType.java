@@ -122,7 +122,7 @@ public class ResolvableType implements Serializable {
 	private final Integer hash;
 
 	@Nullable
-	private Class<?> resolved;
+	 private Class<?>  resolved;
 
 	@Nullable
 	private volatile ResolvableType superType;
