@@ -242,8 +242,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected <T> T doGetBean(
 			String name, @Nullable Class<T> requiredType, @Nullable Object[] args, boolean typeCheckOnly)
 			throws BeansException {
-
-		String beanName = transformedBeanName(name);
+		String beanName = transformedBeanName(name); //取指定 alias 所表示的最终 beanName，例如别名 A 指向名称为 B 的 bean 则返回 B; 如果是以&开头，那么就是FactoryBean,去掉开头的&符号
 		Object bean;
 
 		// Eagerly check singleton cache for manually registered singletons.
