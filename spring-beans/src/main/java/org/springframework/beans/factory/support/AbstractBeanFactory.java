@@ -245,13 +245,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		String beanName = transformedBeanName(name); //取指定 alias 所表示的最终 beanName，例如别名 A 指向名称为 B 的 bean 则返回 B; 如果是以&开头，那么就是FactoryBean,去掉开头的&符号
 		Object bean;
 
-		// Eagerly check singleton cache for manually registered singletons.
+		// Eagerly check singleton cache for manually registered singletons.  // 这里先从缓存中获取或者从singletonFactories中的objectFactory中获取,为什么会首先使用这段代码呢？因为在创建单例Bean的时候，会存在依赖注入的情况，而在创建依赖的时候，为了避免循环依赖,Spring 创建bean 的原则是不等Bean 创建完成就会将创建Bean的ObjectFactory 提前曝光，也就是先将ObjectFactory 加入到缓存中，一旦下个Bean 创建时依赖上个bean ,则直接使用ObjectFactory
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {
 				if (isSingletonCurrentlyInCreation(beanName)) {
 					logger.trace("Returning eagerly cached instance of singleton bean '" + beanName +
-							"' that is not fully initialized yet - a consequence of a circular reference");
+							"' that is not fully initialized yet - a consequence of a circular reference");   // 日志打印，提示此Bean 还没有完全初始化，在一个循环引用中
 				}
 				else {
 					logger.trace("Returning cached instance of singleton bean '" + beanName + "'");
@@ -263,13 +263,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		else {
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.
-			if (isPrototypeCurrentlyInCreation(beanName)) {
+			if (isPrototypeCurrentlyInCreation(beanName)) {  	// 如果是原型模型，存在循环依赖，那就直接报错，原型模型是不允许循环依赖的
 				throw new BeanCurrentlyInCreationException(beanName);
 			}
 
 			// Check if bean definition exists in this factory.
 			BeanFactory parentBeanFactory = getParentBeanFactory();
-			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
+			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {  //如果父类工厂不为空，并且当前beanDefinitionMap 没有对应的beanName ，那就委托父类处理，
 				// Not found -> check parent.
 				String nameToLookup = originalBeanName(name);
 				if (parentBeanFactory instanceof AbstractBeanFactory) {
@@ -289,7 +289,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 
-			if (!typeCheckOnly) {
+			if (!typeCheckOnly) {   //如果不是仅仅做类型检查则是创建bean,这里进行记录，加入到alreadyCreated 里面，表示已经创建
 				markBeanAsCreated(beanName);
 			}
 

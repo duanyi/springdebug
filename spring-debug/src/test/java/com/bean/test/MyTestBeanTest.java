@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 
@@ -23,12 +24,13 @@ class MyTestBeanTest {
 
 	@Test
 	public void testSimpleLoad111() {
-
-		ApplicationContext bf = new ClassPathXmlApplicationContext("classpath:beanFactoryTest.xml");
+		ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
+//		ApplicationContext bf = new ClassPathXmlApplicationContext("classpath:beanFactoryTest.xml");
 //		BeanFactory bf = new XmlBeanFactory(new ClassPathResource("beanFactoryTest.xml"));
-		MyTestBean bean = bf.getBean(MyTestBean.class);
-		assertThat(bean.getStr()).isEqualTo("123");
-		System.out.println(bean.getStr().equalsIgnoreCase("123"));
+//		MyTestBean bean = bf.getBean(MyTestBean.class);
+//		assertThat(bean.getStr()).isEqualTo("123");
+//		System.out.println(bean.getStr().equalsIgnoreCase("123"));
+		System.out.println("1");
 
 	}
 
