@@ -517,38 +517,38 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
-			prepareRefresh();
+			prepareRefresh(); //容器预先准备，记录容器启动时间
 
 			// Tell the subclass to refresh the internal bean factory.
-			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory(); //创建bean工厂，如果有则销毁，没有就创建，实现对BeanDefinition的装载
 
 			// Prepare the bean factory for use in this context.
-			prepareBeanFactory(beanFactory);
+			prepareBeanFactory(beanFactory); //配置bean工厂的标准上下文特性，入类装装载器、PostProcessor
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
-				postProcessBeanFactory(beanFactory);
+				postProcessBeanFactory(beanFactory); //模版方法，提供一个修改容器beanfactory的接口
 
 				// Invoke factory processors registered as beans in the context.
-				invokeBeanFactoryPostProcessors(beanFactory);
+				invokeBeanFactoryPostProcessors(beanFactory);  //载Bean未开始实例化时，对Definition定义的修改入口，常见的PropertyPlaceholderConfigurer就在这里调用
 
 				// Register bean processors that intercept bean creation.
-				registerBeanPostProcessors(beanFactory);
+				registerBeanPostProcessors(beanFactory); //注册用于拦截bean创建过程的BeanPostProcessors
 
 				// Initialize message source for this context.
-				initMessageSource();
+				initMessageSource(); //初始化MessageResource
 
 				// Initialize event multicaster for this context.
-				initApplicationEventMulticaster();
+				initApplicationEventMulticaster(); //初始化上下文事件广播
 
 				// Initialize other special beans in specific context subclasses.
-				onRefresh();
+				onRefresh();  //模版方法
 
 				// Check for listener beans and register them.
-				registerListeners();
+				registerListeners(); //注册监听器
 
 				// Instantiate all remaining (non-lazy-init) singletons.
-				finishBeanFactoryInitialization(beanFactory);
+				finishBeanFactoryInitialization(beanFactory); //完成容器的初始化里面的preInstantiateSingletons会完成单例对象的创建
 
 				// Last step: publish corresponding event.
 				finishRefresh();
